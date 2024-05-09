@@ -6,8 +6,15 @@ import java.io.InputStreamReader;
 import java.util.Stack;
 
 public class Main {
+    public static final int MAX = 25;
+
+    public static int[][] map = new int[MAX][MAX];//地图
+    public static int[] row = new int[MAX];//横向靶子
+    public static int[] col = new int[MAX];//纵向靶子
+    public static Stack<Integer> stack = new Stack<>();//记录路径
+
     //检查所有箭靶是否全部用完
-    public static boolean check(int n, int[] row, int[] col) {
+    public static boolean check(int n) {
         for (int i = 0; i < n; i++) {
             if (row[i] != 0 || col[i] != 0) {
                 return false;
@@ -17,8 +24,7 @@ public class Main {
     }
 
     //使用dfs遍历地图
-    public static boolean dfs(int n, int[][] map, int[] row, int[] col,
-                              int i, int j, Stack<Integer> stack) {
+    public static boolean dfs(int n, int i, int j) {
         //判断上一步走的是否合理 越界
         if (i < 0 || i >= n || j < 0 || j >= n) {
             return false;
@@ -30,21 +36,21 @@ public class Main {
         col[i]--;
         map[i][j] = 1;//标记为已经走过
         //上一步移动到当前位置 当前位置箭靶减1
-        if (i == n - 1 && j == n - 1 && check(n, row, col)) {//走到了右下角
+        if (i == n - 1 && j == n - 1 && check(n)) {//走到了右下角
             stack.push(i * n + j);//将最后一个位置加入
             return true;
         }
         //尝试往四个方向走
         //记录从当前位置是否能到右下角
-        boolean flag = dfs(n, map, row, col, i - 1, j, stack);//上
+        boolean flag = dfs(n, i - 1, j);//上
         if (!flag) {
-            flag = dfs(n, map, row, col, i + 1, j, stack);//下
+            flag = dfs(n, i + 1, j);//下
         }
         if (!flag) {
-            flag = dfs(n, map, row, col, i, j - 1, stack);//左
+            flag = dfs(n, i, j - 1);//左
         }
         if (!flag) {
-            flag = dfs(n, map, row, col, i, j + 1, stack);//右
+            flag = dfs(n, i, j + 1);//右
         }
         if (flag) {//如果从当前位置能够到达右下角
             stack.push(i * n + j);//将当前位置加入栈
@@ -63,8 +69,6 @@ public class Main {
         try {
             br = new BufferedReader(new InputStreamReader(System.in));
             int n = Integer.parseInt(br.readLine());//地图大小n*n
-            int[] row = new int[n];//横向靶子
-            int[] col = new int[n];//纵向靶子
             //数据输入
             String[] split = br.readLine().split(" ");
             for (int i = 0; i < n; i++) {
@@ -76,10 +80,9 @@ public class Main {
             }
 
             //处理 dfs 使用stack记录路径
-            Stack<Integer> path = new Stack<>();
-            dfs(n, new int[n][n], row, col, 0, 0, path);
-            while (!path.isEmpty()) {
-                Integer res = path.pop();
+            dfs(n, 0, 0);
+            while (!stack.isEmpty()) {
+                Integer res = stack.pop();
                 System.out.print(res + " ");
             }
         } catch (IOException e) {
