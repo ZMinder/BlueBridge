@@ -5,6 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 public class Main {
+    //使用dfs遍历地图
+    public static void dfs(int[][] map, int[] row, int[] col) {
+
+    }
+
+
     public static void main(String[] args) {
         BufferedReader br = null;
         try {
@@ -23,6 +29,7 @@ public class Main {
             }
 
             //处理 dfs
+            int[][] map = new int[n][n];//地图信息 1表示路径
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
