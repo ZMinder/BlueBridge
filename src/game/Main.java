@@ -53,7 +53,7 @@ public class Main {
             int[] max = new int[n - k + 1];//窗口最大值
             int[] min = new int[n - k + 1];//窗口最小值
             double res = solve(n, k, nums, max, min);
-            System.out.printf("%.1f", res);
+            System.out.printf("%.2f", res);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
