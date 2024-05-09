@@ -28,10 +28,12 @@ public class Main {
             }
             maxList.addLast(right);//将cur加入窗口
             minList.addLast(right);
-            max[right - k + 1] = maxList.peekFirst();//决定最大值
-            min[right - k + 1] = minList.peekFirst();//决定最小值
-            minSum += minList.peekFirst();
-            maxSum += maxList.peekFirst();
+            if (right >= k - 1) {//窗口结算
+                max[right - k + 1] = maxList.peekFirst();//决定最大值
+                min[right - k + 1] = minList.peekFirst();//决定最小值
+                minSum += nums[minList.peekFirst()];
+                maxSum += nums[maxList.peekFirst()];
+            }
         }
         return (maxSum - minSum) / (double) (n - k + 1);
     }
@@ -50,6 +52,8 @@ public class Main {
             }
             int[] max = new int[n - k + 1];//窗口最大值
             int[] min = new int[n - k + 1];//窗口最小值
+            double res = solve(n, k, nums, max, min);
+            System.out.printf("%.1f", res);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
