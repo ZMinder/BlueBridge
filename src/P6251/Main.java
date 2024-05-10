@@ -1,4 +1,4 @@
-package game;
+package P6251;
 
 import java.io.BufferedReader;
 import java.io.IOException;

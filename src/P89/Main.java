@@ -1,4 +1,4 @@
-package path_mystery;
+package P89;
 
 import java.io.BufferedReader;
 import java.io.IOException;
