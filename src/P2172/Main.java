@@ -91,10 +91,26 @@ public class Main {
      * @return 查询区间的最大公约数
      */
     public static int query(int[] tree, int index, int left, int right, int start, int end) {
-        if (start > right || end < left) {//查询区间不在当前节点区间内
+        if (start > right || end < left) {//查询区间不在当前节点区间内 由下面控制 条件不会成立
+            //主要是因为最大公约数问题 返回什么都不太合适
             return -1;
         }
-        return -1;//没写完 暂时返回-1
+        if (start <= left && end >= right) {//查询区间大于当前节点的区间
+            //最终结果由当前区间的结果加上其他区间的结果整合得到
+            return tree[index];//返回当前节点覆盖区间的结果
+        }
+        int mid = left + (right - left) / 2;//当前节点区间的中间点
+        int l = 2 * index + 1;//左子节点下标
+        int r = 2 * index + 2;//右子节点下标
+        if (end <= mid) {//查询区间在左区间内
+            return query(tree, l, left, mid, start, end);//在左区间查询;
+        } else if (left > mid) {//查询区间在右区间内
+            return query(tree, r, mid + 1, right, start, end);//在右区间查询
+        }
+        //两个区间都有一部分
+        int leftVal = query(tree, l, left, mid, start, end);//在左区间查询
+        int rightVal = query(tree, r, mid + 1, right, start, end);//在右区间查询
+        return gcd(leftVal, rightVal);//返回两个区间最大公约数的最大公约数
     }
 
     public static boolean check(int[] nums, int left, int right) {//判断一个区间内的最大公约数是否为1
