@@ -51,7 +51,7 @@ public class Main {
      */
 
     public static int solve(int[] nums) {//使用线段树
-        int[] tree = new int[2 * nums.length];//线段树
+        int[] tree = new int[4 * nums.length];//线段树
         build(nums, tree, 0, 0, nums.length - 1);//构建线段树
         if (tree[0] != 1) {
             return -1;//如果0~n-1区间的最大公约数不是1 说明不存在区间的最大公约数为1 无法达到题目要求
@@ -134,14 +134,6 @@ public class Main {
         int leftVal = query(tree, l, left, mid, start, end);//在左区间查询
         int rightVal = query(tree, r, mid + 1, right, start, end);//在右区间查询
         return gcd(leftVal, rightVal);//返回两个区间最大公约数的最大公约数
-    }
-
-    public static boolean check(int[] nums, int left, int right) {//判断一个区间内的最大公约数是否为1
-        int gcd = gcd(nums[left], nums[left + 1]);
-        for (int i = left + 2; i <= right && gcd != 1; i++) {
-            gcd = gcd(gcd, nums[i]);
-        }
-        return gcd == 1;
     }
 
     public static int gcd(int a, int b) {//辗转相除法求最大公约数
