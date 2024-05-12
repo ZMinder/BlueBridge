@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 
 public class Main {
     //思路：如果数组中存在1 1的个数是m个 操作数就是n - m （1将左右的数变成1）
-    //如果数组中不存在1 就去找最短的区间m m内的数最大公约数是1 使用二分去查找最短区间  利用线段树
+    //如果数组中不存在1 就去找最短的区间m m内的数最大公约数是1 执行m-1次会出现1个最大公约数
+    // 再执行n-1次就会全1
+    // 使用二分去查找最短区间  利用线段树
     public static void main(String[] args) {
         BufferedReader br = null;
         try {
@@ -21,9 +23,10 @@ public class Main {
             }
             if (nums > 0) {//数组中出现了1 每次将1周围的变成1
                 System.out.println(n - nums);
+            }else{
+                int res = solve(arr);
+                System.out.println(res);
             }
-            int res = solve(arr);
-            System.out.println(res);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -53,7 +56,31 @@ public class Main {
         if (tree[0] != 1) {
             return -1;//如果0~n-1区间的最大公约数不是1 说明不存在区间的最大公约数为1 无法达到题目要求
         }
-        return -1;//没写完暂时返回-1
+        int min = nums.length;//最短区间长度
+        for (int i = 0; i < nums.length; i++) {//考虑以每个位置作为区间的左边界
+            // 求得以当前左边界的最大公约数为1的最短区间 最后将每个左边界的最短区间长度取最小即为整体的最短区间
+
+            //二分右边界
+            int minRight = nums.length;//右边界取最小值
+            int left = i + 1;//右边界最左取值
+            int right = nums.length - 1;//右边界最右取值
+            while (left <= right) {
+                int mid = left + (right - left) / 2;
+                if (query(tree, 0, 0, nums.length - 1, i, mid) == 1) {
+                    //i~mid最大公约数为1 最短区间可能在i~(left,mid)
+                    right = mid - 1;
+                    minRight = Math.min(minRight, mid);
+                } else {
+                    //i~mid最大公约数不为1 最短区间可能在i~(mid+1,right)
+                    left = mid + 1;
+                }
+            }
+            if (minRight != nums.length) {//说明当前左边界存在一个右边界使得区间最大公约数为1
+                min = Math.min(min, minRight - i + 1);
+            }
+        }
+        //执行最短区间长度-1次 可以出现一个1 再之星n-1次会全1
+        return min - 1 + nums.length - 1;
     }
 
     /**
@@ -100,7 +127,7 @@ public class Main {
         int r = 2 * index + 2;//右子节点下标
         if (end <= mid) {//查询区间在左区间内
             return query(tree, l, left, mid, start, end);//在左区间查询;
-        } else if (left > mid) {//查询区间在右区间内
+        } else if (start > mid) {//查询区间在右区间内
             return query(tree, r, mid + 1, right, start, end);//在右区间查询
         }
         //两个区间都有一部分
