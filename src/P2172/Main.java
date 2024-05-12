@@ -91,10 +91,6 @@ public class Main {
      * @return 查询区间的最大公约数
      */
     public static int query(int[] tree, int index, int left, int right, int start, int end) {
-        if (start > right || end < left) {//查询区间不在当前节点区间内 由下面控制 条件不会成立
-            //主要是因为最大公约数问题 返回什么都不太合适
-            return -1;
-        }
         if (start <= left && end >= right) {//查询区间大于当前节点的区间
             //最终结果由当前区间的结果加上其他区间的结果整合得到
             return tree[index];//返回当前节点覆盖区间的结果
